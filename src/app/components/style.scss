@@ -11,7 +11,9 @@
   }
 
   &.isSelected {
+    font-weight: bold;
     border-color: #0B7285;
+    background: #2e323d;
   }
 
 }
