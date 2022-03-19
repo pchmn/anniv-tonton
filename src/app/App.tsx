@@ -2,8 +2,11 @@ import { CheckboxButton } from '@app/components/CheckboxButton';
 import { AppShell, Button, Center, Group, Space, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
+import JSConfetti from 'js-confetti';
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
+
+const jsConfetti = new JSConfetti();
 
 function App() {
   const db = useMemo(() => getFirestore(), []);
@@ -39,6 +42,7 @@ function App() {
 
   const onSubmit = async () => {
     await setDoc(activitiesSelectedRef, { value: activitiesSelected });
+    jsConfetti.addConfetti();
     notifications.showNotification({
       title: "C'est good",
       message: 'Les activités ont bien été enregistrées'

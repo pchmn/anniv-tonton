@@ -51,7 +51,7 @@ jobs:
 
       # Build
       - name: BUILD
-        run: pnpm build
+        run: pnpm build:ci
 
       # Upload dist artifacts
       - uses: actions/upload-artifact@v2
