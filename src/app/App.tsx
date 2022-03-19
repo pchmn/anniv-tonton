@@ -1,5 +1,5 @@
 import { CheckboxButton } from '@app/components/CheckboxButton';
-import { AppShell, Button, Center, Group, Space, Title } from '@mantine/core';
+import { AppShell, Button, Center, Group, Image, Space, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
 import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
 import JSConfetti from 'js-confetti';
@@ -15,6 +15,8 @@ function App() {
   const [possibleActivities, setPossibleActivities] = useState<string[]>([]);
   const [activitiesSelected, setActivitiesSelected] = useState<string[]>([]);
   const notifications = useNotifications();
+
+  const [validate, setValidate] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(possibleActivitiesRef, (doc) => {
@@ -41,12 +43,20 @@ function App() {
   };
 
   const onSubmit = async () => {
+    if (activitiesSelected.length < 2) {
+      return notifications.showNotification({
+        title: 'OOOOOPS',
+        message: 'Il faut choisir deux activités !',
+        color: 'red'
+      });
+    }
     await setDoc(activitiesSelectedRef, { value: activitiesSelected });
     jsConfetti.addConfetti();
     notifications.showNotification({
       title: "C'est good",
       message: 'Les activités ont bien été enregistrées'
     });
+    setValidate(true);
   };
 
   return (
@@ -62,22 +72,31 @@ function App() {
       })}
     >
       <Center style={{ padding: 20 }}>
-        <Group direction="column" grow>
-          <Title order={2}>Wesh cousin, choisis 2 activités qu&apos;on ira faire avec toi</Title>
-          {possibleActivities.map((item) => (
-            <CheckboxButton
-              key={item}
-              isSelected={activitiesSelected.includes(item)}
-              onClick={() => toggleActivity(item)}
-            >
-              {item}
-            </CheckboxButton>
-          ))}
-          <Space />
-          <Button size="lg" onClick={onSubmit}>
-            Valider
-          </Button>
-        </Group>
+        {!validate ? (
+          <Group direction="column" grow>
+            <Title order={2}>Wesh cousin, choisis 2 activités qu&apos;on ira faire avec toi</Title>
+            {possibleActivities.map((item) => (
+              <CheckboxButton
+                key={item}
+                isSelected={activitiesSelected.includes(item)}
+                onClick={() => toggleActivity(item)}
+              >
+                {item}
+              </CheckboxButton>
+            ))}
+            <Space />
+            <Button size="lg" onClick={onSubmit}>
+              Valider
+            </Button>
+          </Group>
+        ) : (
+          <Group direction="column" grow>
+            <Center>
+              <Title order={2}>Leeeets go ! 🚀</Title>
+            </Center>
+            <Image radius="md" src="https://c.tenor.com/tvFWFDXRrmMAAAAd/blow-mind-mind-blown.gif" />
+          </Group>
+        )}
       </Center>
     </AppShell>
   );
