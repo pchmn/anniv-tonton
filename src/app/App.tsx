@@ -1,7 +1,7 @@
 import { CheckboxButton } from '@app/components/CheckboxButton';
 import { AppShell, Button, Center, Group, Space, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
-import { doc, getDoc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 
@@ -14,15 +14,19 @@ function App() {
   const notifications = useNotifications();
 
   useEffect(() => {
-    onSnapshot(possibleActivitiesRef, (doc) => {
+    const unsubscribe = onSnapshot(possibleActivitiesRef, (doc) => {
       setPossibleActivities(doc.data()?.value);
     });
+
+    return () => unsubscribe();
   }, [possibleActivitiesRef]);
 
   useEffect(() => {
-    getDoc(activitiesSelectedRef).then((doc) => {
-      setActivitiesSelected(doc.data()?.value || []);
+    const unsubscribe = onSnapshot(activitiesSelectedRef, (doc) => {
+      setActivitiesSelected(doc.data()?.value);
     });
+
+    return () => unsubscribe();
   }, [activitiesSelectedRef]);
 
   const toggleActivity = (activity: string) => {
