@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from '@app/components/ArrowLeftIcon';
 import { CheckboxButton } from '@app/components/CheckboxButton';
 import { AppShell, Button, Center, Group, Image, Space, Title } from '@mantine/core';
 import { useNotifications } from '@mantine/notifications';
@@ -85,11 +86,12 @@ function App() {
             </Button>
           </Group>
         ) : (
-          <Group direction="column" grow>
-            <Center>
-              <Title order={2}>Leeeets go ! 🚀</Title>
-            </Center>
+          <Group direction="column" align="center">
+            <Title order={2}>Leeeets go ! 🚀</Title>
             <Image radius="md" src="https://c.tenor.com/tvFWFDXRrmMAAAAd/blow-mind-mind-blown.gif" />
+            <Button variant="outline" style={{ marginTop: 10 }} onClick={() => setValidate(false)}>
+              <ArrowLeftIcon /> <Space w="xs" /> Retour aux choix
+            </Button>
           </Group>
         )}
       </Center>
